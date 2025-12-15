@@ -60,7 +60,7 @@
         }
         
         .start-btn, .restart-btn {
-            background: #3498db;
+            background: #e91e63;
             color: white;
             border: none;
             padding: 15px 40px;
@@ -71,7 +71,7 @@
         }
         
         .start-btn:hover, .restart-btn:hover {
-            background: #2980b9;
+            background: #c2185b;
         }
         
         .progress-bar {
@@ -85,7 +85,7 @@
         
         .progress-fill {
             height: 100%;
-            background: #3498db;
+            background: #e91e63;
             transition: width 0.3s;
         }
         
@@ -119,8 +119,8 @@
         }
         
         .answer-btn:hover {
-            background: #e8f4f8;
-            border-color: #3498db;
+            background: #fce4ec;
+            border-color: #e91e63;
         }
         
         .result-section {
@@ -164,6 +164,32 @@
             margin-bottom: 30px;
             color: #856404;
         }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .footer a {
+            color: #e91e63;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            margin-top: 10px;
+        }
+        
+        .social-links a {
+            margin: 0 10px;
+        }
     </style>
 </head>
 <body>
@@ -179,6 +205,9 @@
                 represents your current tech worker experience.
             </p>
             <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
+            <div class="footer">
+                Made by <a href="https://cate.blog" target="_blank">Cate</a>
+            </div>
         </div>
 
         <!-- Quiz Screen -->
@@ -189,12 +218,24 @@
             <div class="question-number" id="question-number"></div>
             <div class="question-text" id="question-text"></div>
             <div class="answers" id="answers"></div>
+            <div class="footer">
+                Made by <a href="https://cate.blog" target="_blank">Cate</a>
+            </div>
         </div>
 
         <!-- Results Screen -->
         <div id="results-screen" class="hidden">
             <div id="results-content"></div>
             <button class="restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
+            <div class="footer">
+                <div>Made by <a href="https://cate.blog" target="_blank">Cate</a></div>
+                <div class="social-links">
+                    Follow me on 
+                    <a href="https://www.linkedin.com/in/catehuston/" target="_blank">LinkedIn</a> / 
+                    <a href="https://hachyderm.io/@cate" target="_blank">Mastodon</a> / 
+                    <a href="https://bsky.app/profile/catehstn.bsky.social" target="_blank">Bluesky</a>
+                </div>
+            </div>
         </div>
     </div>
 
