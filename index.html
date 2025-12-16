@@ -32,11 +32,15 @@
             <div class="question-number" id="question-number"></div>
             <div class="question-text" id="question-text"></div>
             <div class="answers" id="answers"></div>
+            <div class="quiz-nav">
+                <button class="back-btn" id="back-btn" onclick="goBack()">← Back</button>
+                <button class="quit-btn" onclick="quitQuiz()">Start Over</button>
+            </div>
             <div class="footer">
                 Made by <a href="https://cate.blog" target="_blank">Cate</a>
             </div>
         </div>
-
+        
         <!-- Results Screen -->
         <div id="results-screen" class="hidden">
             <div id="results-content"></div>

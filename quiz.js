@@ -26,6 +26,7 @@ function showQuestion() {
     
     const answersDiv = document.getElementById('answers');
     answersDiv.innerHTML = '';
+    delete answersDiv.dataset.lastAnswer; // Clear previous answer tracking
     
     question.answers.forEach((answer, index) => {
         const btn = document.createElement('button');
@@ -34,10 +35,20 @@ function showQuestion() {
         btn.onclick = () => selectAnswer(index);
         answersDiv.appendChild(btn);
     });
+    
+    // Disable back button on first question
+    const backBtn = document.getElementById('back-btn');
+    if (backBtn) {
+        backBtn.disabled = currentQuestion === 0;
+    }
 }
 
 function selectAnswer(answerIndex) {
     const answer = questions[currentQuestion].answers[answerIndex];
+    
+    // Store the answer for potential back button use
+    document.getElementById('answers').dataset.lastAnswer = answerIndex;
+    
     answer.raccoons.forEach(raccoon => {
         scores[raccoon]++;
     });
@@ -50,7 +61,6 @@ function selectAnswer(answerIndex) {
         showResults();
     }
 }
-
 function showResults() {
     document.getElementById('quiz-screen').classList.add('hidden');
     document.getElementById('results-screen').classList.remove('hidden');
@@ -82,6 +92,42 @@ function showResults() {
     });
     
     document.getElementById('results-content').innerHTML = resultsHTML;
+}
+
+function goBack() {
+    if (currentQuestion > 0) {
+        // Remove points from previous answer
+        const prevQuestion = questions[currentQuestion - 1];
+        const prevAnswerIndex = parseInt(document.getElementById('answers').dataset.lastAnswer);
+        if (!isNaN(prevAnswerIndex)) {
+            const prevAnswer = prevQuestion.answers[prevAnswerIndex];
+            prevAnswer.raccoons.forEach(raccoon => {
+                scores[raccoon]--;
+            });
+        }
+        
+        currentQuestion--;
+        showQuestion();
+    }
+}
+
+function quitQuiz() {
+    if (confirm('Are you sure you want to start over? Your progress will be lost.')) {
+        currentQuestion = 0;
+        scores = {
+            liquor: 0,
+            mpr: 0,
+            conrad: 0,
+            rebecca: 0,
+            melanie: 0,
+            toronto: 0,
+            stuck: 0,
+            alligator: 0
+        };
+        
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('start-screen').classList.remove('hidden');
+    }
 }
 
 function restartQuiz() {
