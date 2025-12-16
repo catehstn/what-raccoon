@@ -300,3 +300,51 @@ body.dark-mode .back-btn:disabled:hover {
     border-color: #4d4d4d;
     color: #b0b0b0;
 }
+
+/* Show runner-up button */
+.runner-up-btn {
+    background: transparent;
+    color: #e91e63;
+    border: 2px solid #e91e63;
+    padding: 12px 30px;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 20px;
+}
+
+.runner-up-btn:hover {
+    background: #e91e63;
+    color: white;
+}
+
+body.dark-mode .runner-up-btn {
+    color: #ff4081;
+    border-color: #ff4081;
+}
+
+body.dark-mode .runner-up-btn:hover {
+    background: #ff4081;
+    color: white;
+}
+
+.runner-up-section {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 2px solid #e0e0e0;
+}
+
+body.dark-mode .runner-up-section {
+    border-top-color: #4d4d4d;
+}
+
+.runner-up-section h3 {
+    color: #666;
+    font-size: 1.3em;
+    margin-bottom: 20px;
+}
+
+body.dark-mode .runner-up-section h3 {
+    color: #b0b0b0;
+}

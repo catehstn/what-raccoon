@@ -61,12 +61,17 @@ function selectAnswer(answerIndex) {
         showResults();
     }
 }
+
 function showResults() {
     document.getElementById('quiz-screen').classList.add('hidden');
     document.getElementById('results-screen').classList.remove('hidden');
     
-    const maxScore = Math.max(...Object.values(scores));
-    const winners = Object.keys(scores).filter(raccoon => scores[raccoon] === maxScore);
+    // Sort raccoons by score
+    const sortedRaccoons = Object.entries(scores)
+        .sort((a, b) => b[1] - a[1]);
+    
+    const maxScore = sortedRaccoons[0][1];
+    const winners = sortedRaccoons.filter(([raccoon, score]) => score === maxScore);
     
     let resultsHTML = '';
     
@@ -74,7 +79,8 @@ function showResults() {
         resultsHTML += '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>';
     }
     
-    winners.forEach(raccoon => {
+    // Show primary result(s)
+    winners.forEach(([raccoon]) => {
         const data = raccoonData[raccoon];
         resultsHTML += `
             <div class="result-section">
@@ -90,6 +96,36 @@ function showResults() {
             </div>
         `;
     });
+    
+    // Find runner-up (if not already shown)
+    const runnerUpCandidates = sortedRaccoons.filter(([raccoon, score]) => {
+        return score < maxScore && !winners.some(([w]) => w === raccoon);
+    });
+    
+    if (runnerUpCandidates.length > 0) {
+        const [runnerUpRaccoon, runnerUpScore] = runnerUpCandidates[0];
+        const runnerUpData = raccoonData[runnerUpRaccoon];
+        
+        resultsHTML += `
+            <button class="runner-up-btn" onclick="toggleRunnerUp()">
+                Show Second Place: ${runnerUpData.name}
+            </button>
+            <div id="runner-up-content" class="runner-up-section hidden">
+                <h3>You're also a bit of a...</h3>
+                <div class="result-section">
+                    <h2 class="result-title">${runnerUpData.name}</h2>
+                    <p class="result-subtitle">${runnerUpData.subtitle}</p>
+                    <div class="image-placeholder">[Add ${runnerUpData.name} image here]</div>
+                    <div class="result-content">
+                        <strong>Why this raccoon is iconic:</strong>
+                        <p>${runnerUpData.iconic}</p>
+                        <strong>This raccoon in tech:</strong>
+                        <p>${runnerUpData.inTech}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
     
     document.getElementById('results-content').innerHTML = resultsHTML;
 }
@@ -145,6 +181,22 @@ function restartQuiz() {
     
     document.getElementById('results-screen').classList.add('hidden');
     document.getElementById('start-screen').classList.remove('hidden');
+}
+
+function toggleRunnerUp() {
+    const runnerUpContent = document.getElementById('runner-up-content');
+    const button = document.querySelector('.runner-up-btn');
+    
+    if (runnerUpContent.classList.contains('hidden')) {
+        runnerUpContent.classList.remove('hidden');
+        button.textContent = 'Hide Second Place';
+    } else {
+        runnerUpContent.classList.add('hidden');
+        const raccoonName = raccoonData[Object.entries(scores)
+            .sort((a, b) => b[1] - a[1])
+            .filter(([r, s]) => s < Math.max(...Object.values(scores)))[0][0]].name;
+        button.textContent = `Show Second Place: ${raccoonName}`;
+    }
 }
 
 // Auto-detect system dark mode preference
