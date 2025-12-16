@@ -1,6 +1,6 @@
 # Which Raccoon Are You?
 
-A personality quiz for tech workers in 2025. Find out which iconic raccoon represents your current tech worker experience.
+A personality quiz for tech workers in 2026. Find out which iconic raccoon represents your current tech worker experience.
 
 ## About
 
