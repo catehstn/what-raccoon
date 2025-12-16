@@ -100,3 +100,10 @@ function restartQuiz() {
     document.getElementById('results-screen').classList.add('hidden');
     document.getElementById('start-screen').classList.remove('hidden');
 }
+
+// Auto-detect system dark mode preference
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark-mode');
+    }
+});
