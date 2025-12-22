@@ -123,4 +123,91 @@ function goBack() {
     const prevAnswerIndex = parseInt(document.getElementById('answers').dataset.lastAnswer);
     
     if (!isNaN(prevAnswerIndex)) {
-        prevQuestion.ans
+        prevQuestion.answers[prevAnswerIndex].raccoons.forEach(raccoon => scores[raccoon]--);
+    }
+    
+    currentQuestion--;
+    showQuestion();
+}
+
+function resetScores() {
+    currentQuestion = 0;
+    Object.keys(scores).forEach(key => scores[key] = 0);
+}
+
+function quitQuiz() {
+    if (!confirm('Are you sure you want to start over? Your progress will be lost.')) return;
+    
+    resetScores();
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('start-screen').classList.remove('hidden');
+}
+
+function restartQuiz() {
+    resetScores();
+    document.getElementById('results-screen').classList.add('hidden');
+    document.getElementById('start-screen').classList.remove('hidden');
+}
+
+function toggleRunnerUp() {
+    const runnerUpContent = document.getElementById('runner-up-content');
+    const button = document.querySelector('.runner-up-btn');
+    
+    if (runnerUpContent.classList.contains('hidden')) {
+        runnerUpContent.classList.remove('hidden');
+        button.textContent = 'Hide Second Place';
+    } else {
+        runnerUpContent.classList.add('hidden');
+        const raccoonName = raccoonData[Object.entries(scores)
+            .sort((a, b) => b[1] - a[1])
+            .filter(([, s]) => s < Math.max(...Object.values(scores)))[0][0]].name;
+        button.textContent = `Show Second Place: ${raccoonName}`;
+    }
+}
+
+function shareResult() {
+    const raccoonText = currentWinners.length > 1 
+        ? currentWinners.join(' and ')
+        : currentWinners[0];
+    
+    const shareText = `I'm a ${raccoonText}! What raccoon are you?`;
+    const shareUrl = 'https://catehstn.github.io/what-raccoon/';
+    const fullText = `${shareText} ${shareUrl}`;
+    
+    // Check if we're on mobile (native share works well on mobile)
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile && navigator.share) {
+        // Use native share on mobile
+        navigator.share({
+            title: 'Which Raccoon Are You?',
+            text: shareText,
+            url: shareUrl
+        }).catch(() => {
+            // If share is cancelled, do nothing
+        });
+    } else {
+        // Copy to clipboard on desktop
+        navigator.clipboard.writeText(fullText).then(() => {
+            const btn = document.getElementById('share-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied to clipboard!';
+            setTimeout(() => btn.textContent = originalText, 2000);
+        }).catch(() => {
+            // Fallback if clipboard API doesn't work
+            alert(`Share this:\n\n${fullText}`);
+        });
+    }
+}
+
+// Auto-detect system dark mode preference
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark-mode');
+    }
+});
+
+// Listen for system dark mode changes in real-time
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    document.body.classList[e.matches ? 'add' : 'remove']('dark-mode');
+});
