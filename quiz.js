@@ -73,6 +73,9 @@ function showResults() {
     const maxScore = sortedRaccoons[0][1];
     const winners = sortedRaccoons.filter(([raccoon, score]) => score === maxScore);
     
+    // Store for sharing
+    currentWinners = winners.map(([raccoon]) => raccoonData[raccoon].name);
+    
     let resultsHTML = '';
     
     if (winners.length > 1) {
@@ -196,6 +199,41 @@ function toggleRunnerUp() {
             .sort((a, b) => b[1] - a[1])
             .filter(([r, s]) => s < Math.max(...Object.values(scores)))[0][0]].name;
         button.textContent = `Show Second Place: ${raccoonName}`;
+    }
+}
+
+function shareResult() {
+    const raccoonText = currentWinners.length > 1 
+        ? currentWinners.join(' and ')
+        : currentWinners[0];
+    
+    const shareText = `I'm a ${raccoonText}! What raccoon are you?`;
+    const shareUrl = 'https://catehstn.github.io/what-raccoon/';
+    
+    // Try to use native share if available (mobile)
+    if (navigator.share) {
+        navigator.share({
+            title: 'Which Raccoon Are You?',
+            text: shareText,
+            url: shareUrl
+        }).catch(() => {
+            // If share is cancelled, do nothing
+        });
+    } else {
+        // Fallback: copy to clipboard
+        const fullText = `${shareText} ${shareUrl}`;
+        navigator.clipboard.writeText(fullText).then(() => {
+            // Change button text temporarily
+            const btn = document.getElementById('share-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied to clipboard!';
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 2000);
+        }).catch(() => {
+            // If clipboard fails, show the text
+            alert(`Share this:\n\n${fullText}`);
+        });
     }
 }
 
