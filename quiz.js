@@ -1,13 +1,8 @@
 let currentQuestion = 0;
+let currentWinners = [];
 let scores = {
-    liquor: 0,
-    mpr: 0,
-    conrad: 0,
-    rebecca: 0,
-    melanie: 0,
-    toronto: 0,
-    stuck: 0,
-    alligator: 0
+    liquor: 0, mpr: 0, conrad: 0, rebecca: 0,
+    melanie: 0, toronto: 0, stuck: 0, alligator: 0
 };
 
 function startQuiz() {
@@ -26,7 +21,7 @@ function showQuestion() {
     
     const answersDiv = document.getElementById('answers');
     answersDiv.innerHTML = '';
-    delete answersDiv.dataset.lastAnswer; // Clear previous answer tracking
+    delete answersDiv.dataset.lastAnswer;
     
     question.answers.forEach((answer, index) => {
         const btn = document.createElement('button');
@@ -36,53 +31,34 @@ function showQuestion() {
         answersDiv.appendChild(btn);
     });
     
-    // Disable back button on first question
     const backBtn = document.getElementById('back-btn');
-    if (backBtn) {
-        backBtn.disabled = currentQuestion === 0;
-    }
+    if (backBtn) backBtn.disabled = currentQuestion === 0;
 }
 
 function selectAnswer(answerIndex) {
     const answer = questions[currentQuestion].answers[answerIndex];
-    
-    // Store the answer for potential back button use
     document.getElementById('answers').dataset.lastAnswer = answerIndex;
     
-    answer.raccoons.forEach(raccoon => {
-        scores[raccoon]++;
-    });
-    
+    answer.raccoons.forEach(raccoon => scores[raccoon]++);
     currentQuestion++;
     
-    if (currentQuestion < questions.length) {
-        showQuestion();
-    } else {
-        showResults();
-    }
+    currentQuestion < questions.length ? showQuestion() : showResults();
 }
 
 function showResults() {
     document.getElementById('quiz-screen').classList.add('hidden');
     document.getElementById('results-screen').classList.remove('hidden');
     
-    // Sort raccoons by score
-    const sortedRaccoons = Object.entries(scores)
-        .sort((a, b) => b[1] - a[1]);
-    
+    const sortedRaccoons = Object.entries(scores).sort((a, b) => b[1] - a[1]);
     const maxScore = sortedRaccoons[0][1];
-    const winners = sortedRaccoons.filter(([raccoon, score]) => score === maxScore);
+    const winners = sortedRaccoons.filter(([, score]) => score === maxScore);
     
-    // Store for sharing
     currentWinners = winners.map(([raccoon]) => raccoonData[raccoon].name);
     
-    let resultsHTML = '';
+    let resultsHTML = winners.length > 1 
+        ? '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>' 
+        : '';
     
-    if (winners.length > 1) {
-        resultsHTML += '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>';
-    }
-    
-    // Show primary result(s)
     winners.forEach(([raccoon]) => {
         const data = raccoonData[raccoon];
         resultsHTML += `
@@ -100,13 +76,12 @@ function showResults() {
         `;
     });
     
-    // Find runner-up (if not already shown)
-    const runnerUpCandidates = sortedRaccoons.filter(([raccoon, score]) => {
-        return score < maxScore && !winners.some(([w]) => w === raccoon);
-    });
+    const runnerUpCandidates = sortedRaccoons.filter(([raccoon, score]) => 
+        score < maxScore && !winners.some(([w]) => w === raccoon)
+    );
     
     if (runnerUpCandidates.length > 0) {
-        const [runnerUpRaccoon, runnerUpScore] = runnerUpCandidates[0];
+        const [runnerUpRaccoon] = runnerUpCandidates[0];
         const runnerUpData = raccoonData[runnerUpRaccoon];
         
         resultsHTML += `
@@ -134,54 +109,34 @@ function showResults() {
 }
 
 function goBack() {
-    if (currentQuestion > 0) {
-        // Remove points from previous answer
-        const prevQuestion = questions[currentQuestion - 1];
-        const prevAnswerIndex = parseInt(document.getElementById('answers').dataset.lastAnswer);
-        if (!isNaN(prevAnswerIndex)) {
-            const prevAnswer = prevQuestion.answers[prevAnswerIndex];
-            prevAnswer.raccoons.forEach(raccoon => {
-                scores[raccoon]--;
-            });
-        }
-        
-        currentQuestion--;
-        showQuestion();
+    if (currentQuestion === 0) return;
+    
+    const prevQuestion = questions[currentQuestion - 1];
+    const prevAnswerIndex = parseInt(document.getElementById('answers').dataset.lastAnswer);
+    
+    if (!isNaN(prevAnswerIndex)) {
+        prevQuestion.answers[prevAnswerIndex].raccoons.forEach(raccoon => scores[raccoon]--);
     }
+    
+    currentQuestion--;
+    showQuestion();
+}
+
+function resetScores() {
+    currentQuestion = 0;
+    Object.keys(scores).forEach(key => scores[key] = 0);
 }
 
 function quitQuiz() {
-    if (confirm('Are you sure you want to start over? Your progress will be lost.')) {
-        currentQuestion = 0;
-        scores = {
-            liquor: 0,
-            mpr: 0,
-            conrad: 0,
-            rebecca: 0,
-            melanie: 0,
-            toronto: 0,
-            stuck: 0,
-            alligator: 0
-        };
-        
-        document.getElementById('quiz-screen').classList.add('hidden');
-        document.getElementById('start-screen').classList.remove('hidden');
-    }
+    if (!confirm('Are you sure you want to start over? Your progress will be lost.')) return;
+    
+    resetScores();
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('start-screen').classList.remove('hidden');
 }
 
 function restartQuiz() {
-    currentQuestion = 0;
-    scores = {
-        liquor: 0,
-        mpr: 0,
-        conrad: 0,
-        rebecca: 0,
-        melanie: 0,
-        toronto: 0,
-        stuck: 0,
-        alligator: 0
-    };
-    
+    resetScores();
     document.getElementById('results-screen').classList.add('hidden');
     document.getElementById('start-screen').classList.remove('hidden');
 }
@@ -197,7 +152,7 @@ function toggleRunnerUp() {
         runnerUpContent.classList.add('hidden');
         const raccoonName = raccoonData[Object.entries(scores)
             .sort((a, b) => b[1] - a[1])
-            .filter(([r, s]) => s < Math.max(...Object.values(scores)))[0][0]].name;
+            .filter(([, s]) => s < Math.max(...Object.values(scores)))[0][0]].name;
         button.textContent = `Show Second Place: ${raccoonName}`;
     }
 }
@@ -210,47 +165,31 @@ function shareResult() {
     const shareText = `I'm a ${raccoonText}! What raccoon are you?`;
     const shareUrl = 'https://catehstn.github.io/what-raccoon/';
     const fullText = `${shareText} ${shareUrl}`;
-    
-    // Check if we're on mobile (native share works well on mobile)
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (isMobile && navigator.share) {
-        // Use native share on mobile
         navigator.share({
             title: 'Which Raccoon Are You?',
             text: shareText,
             url: shareUrl
-        }).catch(() => {
-            // If share is cancelled, do nothing
-        });
+        }).catch(() => {});
     } else {
-        // Copy to clipboard on desktop
         navigator.clipboard.writeText(fullText).then(() => {
             const btn = document.getElementById('share-btn');
             const originalText = btn.textContent;
             btn.textContent = 'Copied to clipboard!';
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 2000);
-        }).catch(() => {
-            // Fallback if clipboard API doesn't work
-            alert(`Share this:\n\n${fullText}`);
-        });
+            setTimeout(() => btn.textContent = originalText, 2000);
+        }).catch(() => alert(`Share this:\n\n${fullText}`));
     }
 }
 
-// Auto-detect system dark mode preference
+// Dark mode
 window.addEventListener('DOMContentLoaded', () => {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
         document.body.classList.add('dark-mode');
     }
 });
 
-// Listen for system dark mode changes in real-time
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (e.matches) {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
+    document.body.classList[e.matches ? 'add' : 'remove']('dark-mode');
 });
