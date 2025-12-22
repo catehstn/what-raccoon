@@ -209,9 +209,13 @@ function shareResult() {
     
     const shareText = `I'm a ${raccoonText}! What raccoon are you?`;
     const shareUrl = 'https://catehstn.github.io/what-raccoon/';
+    const fullText = `${shareText} ${shareUrl}`;
     
-    // Try to use native share if available (mobile)
-    if (navigator.share) {
+    // Check if we're on mobile (native share works well on mobile)
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile && navigator.share) {
+        // Use native share on mobile
         navigator.share({
             title: 'Which Raccoon Are You?',
             text: shareText,
@@ -220,10 +224,8 @@ function shareResult() {
             // If share is cancelled, do nothing
         });
     } else {
-        // Fallback: copy to clipboard
-        const fullText = `${shareText} ${shareUrl}`;
+        // Copy to clipboard on desktop
         navigator.clipboard.writeText(fullText).then(() => {
-            // Change button text temporarily
             const btn = document.getElementById('share-btn');
             const originalText = btn.textContent;
             btn.textContent = 'Copied to clipboard!';
@@ -231,7 +233,7 @@ function shareResult() {
                 btn.textContent = originalText;
             }, 2000);
         }).catch(() => {
-            // If clipboard fails, show the text
+            // Fallback if clipboard API doesn't work
             alert(`Share this:\n\n${fullText}`);
         });
     }
