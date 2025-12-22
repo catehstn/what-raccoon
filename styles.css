@@ -276,3 +276,74 @@ body.dark-mode .tie-notice {
 .hidden {
     display: none;
 }
+
+/* Newsletter CTA */
+.newsletter-cta {
+    margin: 30px 0;
+    padding: 25px;
+    background: var(--surface);
+    border-radius: 8px;
+    text-align: center;
+    color: var(--text);
+}
+
+.newsletter-cta p {
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    color: var(--text-light);
+}
+
+.newsletter-cta a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.newsletter-cta a:hover {
+    text-decoration: underline;
+}
+
+.embeddable-buttondown-form {
+    display: flex;
+    gap: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.embeddable-buttondown-form input[type="email"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 15px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-size: 1em;
+    background: var(--card-bg);
+    color: var(--text);
+}
+
+.embeddable-buttondown-form input[type="submit"] {
+    padding: 10px 25px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.embeddable-buttondown-form input[type="submit"]:hover {
+    background: var(--primary-hover);
+}
+
+.buttondown-credit {
+    margin-top: 10px;
+    font-size: 0.8em;
+    opacity: 0.6;
+}
+
+.buttondown-credit a {
+    font-weight: normal;
+}

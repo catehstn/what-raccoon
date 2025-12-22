@@ -44,17 +44,17 @@
         <!-- Results Screen -->
         <div id="results-screen" class="hidden">
             <div id="results-content"></div>
-            <button class="restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
-            <div class="footer">
-                <div>Made by <a href="https://cate.blog" target="_blank">Cate</a></div>
-                <div class="social-links">
-                    Follow me on 
-                    <a href="https://www.linkedin.com/in/catehuston/" target="_blank">LinkedIn</a> / 
-                    <a href="https://hachyderm.io/@cate" target="_blank">Mastodon</a> / 
-                    <a href="https://bsky.app/profile/catehstn.bsky.social" target="_blank">Bluesky</a>
-                </div>
+            <div class="newsletter-cta">
+                <p>Liked this? Subscribe to my newsletter or check out my book <a href="https://cate.blog/book/" target="_blank">The Engineering Leader</a>.</p>
+                <form action="https://buttondown.com/api/emails/embed-subscribe/whats-my-job-again" method="post" class="embeddable-buttondown-form">
+                    <input type="email" name="email" id="bd-email" placeholder="Enter your email" required />
+                    <input type="submit" value="Subscribe" />
+                </form>
+                <p class="buttondown-credit">
+                    <a href="https://buttondown.com/refer/whats-my-job-again" target="_blank">Powered by Buttondown.</a>
+                </p>
             </div>
-        </div>
+            <button class="restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
     </div>
 
     <script src="questions.js"></script>
