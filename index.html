@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Which Raccoon Are You?</title>
+    <meta name="description" content="A personality quiz for tech workers. Find out which iconic raccoon represents your current work experience.">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,14 +14,14 @@
             <h1>Which Raccoon Are You?</h1>
             <p class="subtitle">A personality quiz for tech workers in 2026</p>
             <div class="image-placeholder">[Add quiz intro image here]</div>
-            <p style="margin-bottom: 30px;">
+            <p class="intro-text">
                 Are you thriving despite the chaos? Burnt out and self-sabotaging? 
                 Riding the capitalist alligator? Take this quiz to find out which iconic raccoon 
                 represents your current tech worker experience.
             </p>
             <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
             <div class="footer">
-                Made by <a href="https://cate.blog" target="_blank">Cate</a>
+                Made by <a href="https://cate.blog" target="_blank" rel="noopener">Cate</a>
             </div>
         </div>
 
@@ -37,7 +38,7 @@
                 <button class="quit-btn" onclick="quitQuiz()">Start Over</button>
             </div>
             <div class="footer">
-                Made by <a href="https://cate.blog" target="_blank">Cate</a>
+                Made by <a href="https://cate.blog" target="_blank" rel="noopener">Cate</a>
             </div>
         </div>
         
@@ -45,17 +46,27 @@
         <div id="results-screen" class="hidden">
             <div id="results-content"></div>
             <div class="newsletter-cta">
-                <p>Liked this? Subscribe to my newsletter or check out my book <a href="https://cate.blog/book/" target="_blank">The Engineering Leader</a>.</p>
+                <p>Liked this? Subscribe to my newsletter or check out my book <a href="https://cate.blog/book/" target="_blank" rel="noopener">The Engineering Leader</a>.</p>
                 <form action="https://buttondown.com/api/emails/embed-subscribe/whats-my-job-again" method="post" class="embeddable-buttondown-form">
                     <input type="email" name="email" id="bd-email" placeholder="Enter your email" required />
                     <input type="submit" value="Subscribe" />
                 </form>
                 <p class="buttondown-credit">
-                    <a href="https://buttondown.com/refer/whats-my-job-again" target="_blank">Powered by Buttondown.</a>
+                    <a href="https://buttondown.com/refer/whats-my-job-again" target="_blank" rel="noopener">Powered by Buttondown.</a>
                 </p>
             </div>
             <button class="share-btn" id="share-btn" onclick="shareResult()">Share Your Result</button>
             <button class="restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
+            <div class="footer">
+                <div>Made by <a href="https://cate.blog" target="_blank" rel="noopener">Cate</a></div>
+                <div class="social-links">
+                    Follow me on 
+                    <a href="https://www.linkedin.com/in/catehuston/" target="_blank" rel="noopener">LinkedIn</a> / 
+                    <a href="https://hachyderm.io/@cate" target="_blank" rel="noopener">Mastodon</a> / 
+                    <a href="https://bsky.app/profile/catehstn.bsky.social" target="_blank" rel="noopener">Bluesky</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="questions.js"></script>
