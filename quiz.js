@@ -21,7 +21,7 @@ function showQuestion() {
     
     const answersDiv = document.getElementById('answers');
     answersDiv.innerHTML = '';
-    delete answersDiv.dataset.lastAnswer;
+    delete answersDiv.dataset.lastAnswer; // Clear previous answer tracking
     
     question.answers.forEach((answer, index) => {
         const btn = document.createElement('button');
@@ -31,12 +31,15 @@ function showQuestion() {
         answersDiv.appendChild(btn);
     });
     
+    // Disable back button on first question
     const backBtn = document.getElementById('back-btn');
     if (backBtn) backBtn.disabled = currentQuestion === 0;
 }
 
 function selectAnswer(answerIndex) {
     const answer = questions[currentQuestion].answers[answerIndex];
+    
+    // Store the answer for potential back button use
     document.getElementById('answers').dataset.lastAnswer = answerIndex;
     
     answer.raccoons.forEach(raccoon => scores[raccoon]++);
@@ -49,16 +52,19 @@ function showResults() {
     document.getElementById('quiz-screen').classList.add('hidden');
     document.getElementById('results-screen').classList.remove('hidden');
     
+    // Sort raccoons by score
     const sortedRaccoons = Object.entries(scores).sort((a, b) => b[1] - a[1]);
     const maxScore = sortedRaccoons[0][1];
     const winners = sortedRaccoons.filter(([, score]) => score === maxScore);
     
+    // Store for sharing
     currentWinners = winners.map(([raccoon]) => raccoonData[raccoon].name);
     
     let resultsHTML = winners.length > 1 
         ? '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>' 
         : '';
     
+    // Show primary result(s)
     winners.forEach(([raccoon]) => {
         const data = raccoonData[raccoon];
         resultsHTML += `
@@ -76,6 +82,7 @@ function showResults() {
         `;
     });
     
+    // Find runner-up (if not already shown)
     const runnerUpCandidates = sortedRaccoons.filter(([raccoon, score]) => 
         score < maxScore && !winners.some(([w]) => w === raccoon)
     );
@@ -111,85 +118,9 @@ function showResults() {
 function goBack() {
     if (currentQuestion === 0) return;
     
+    // Remove points from previous answer
     const prevQuestion = questions[currentQuestion - 1];
     const prevAnswerIndex = parseInt(document.getElementById('answers').dataset.lastAnswer);
     
     if (!isNaN(prevAnswerIndex)) {
-        prevQuestion.answers[prevAnswerIndex].raccoons.forEach(raccoon => scores[raccoon]--);
-    }
-    
-    currentQuestion--;
-    showQuestion();
-}
-
-function resetScores() {
-    currentQuestion = 0;
-    Object.keys(scores).forEach(key => scores[key] = 0);
-}
-
-function quitQuiz() {
-    if (!confirm('Are you sure you want to start over? Your progress will be lost.')) return;
-    
-    resetScores();
-    document.getElementById('quiz-screen').classList.add('hidden');
-    document.getElementById('start-screen').classList.remove('hidden');
-}
-
-function restartQuiz() {
-    resetScores();
-    document.getElementById('results-screen').classList.add('hidden');
-    document.getElementById('start-screen').classList.remove('hidden');
-}
-
-function toggleRunnerUp() {
-    const runnerUpContent = document.getElementById('runner-up-content');
-    const button = document.querySelector('.runner-up-btn');
-    
-    if (runnerUpContent.classList.contains('hidden')) {
-        runnerUpContent.classList.remove('hidden');
-        button.textContent = 'Hide Second Place';
-    } else {
-        runnerUpContent.classList.add('hidden');
-        const raccoonName = raccoonData[Object.entries(scores)
-            .sort((a, b) => b[1] - a[1])
-            .filter(([, s]) => s < Math.max(...Object.values(scores)))[0][0]].name;
-        button.textContent = `Show Second Place: ${raccoonName}`;
-    }
-}
-
-function shareResult() {
-    const raccoonText = currentWinners.length > 1 
-        ? currentWinners.join(' and ')
-        : currentWinners[0];
-    
-    const shareText = `I'm a ${raccoonText}! What raccoon are you?`;
-    const shareUrl = 'https://catehstn.github.io/what-raccoon/';
-    const fullText = `${shareText} ${shareUrl}`;
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    if (isMobile && navigator.share) {
-        navigator.share({
-            title: 'Which Raccoon Are You?',
-            text: shareText,
-            url: shareUrl
-        }).catch(() => {});
-    } else {
-        navigator.clipboard.writeText(fullText).then(() => {
-            const btn = document.getElementById('share-btn');
-            const originalText = btn.textContent;
-            btn.textContent = 'Copied to clipboard!';
-            setTimeout(() => btn.textContent = originalText, 2000);
-        }).catch(() => alert(`Share this:\n\n${fullText}`));
-    }
-}
-
-// Dark mode
-window.addEventListener('DOMContentLoaded', () => {
-    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark-mode');
-    }
-});
-
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    document.body.classList[e.matches ? 'add' : 'remove']('dark-mode');
-});
+        prevQuestion.ans
