@@ -100,7 +100,7 @@ function showResults() {
                 <div class="result-section">
                     <h2 class="result-title">${runnerUpData.name}</h2>
                     <p class="result-subtitle">${runnerUpData.subtitle}</p>
-                    <img src="images/${raccoon}.png" alt="${data.name}" style="width: 100%; border-radius: 8px; margin: 30px 0;">
+                    <<img src="images/${runnerUpRaccoon}.png" alt="${runnerUpData.name}" style="width: 100%; border-radius: 8px; margin: 30px 0;">
                     <div class="result-content">
                         <strong>Why this raccoon is iconic:</strong>
                         <p>${runnerUpData.iconic}</p>
