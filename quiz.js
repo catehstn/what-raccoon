@@ -48,21 +48,18 @@ function selectAnswer(answerIndex) {
 function showResults() {
     document.getElementById(ELEMENT_IDS.QUIZ_SCREEN).classList.add('hidden');
     document.getElementById(ELEMENT_IDS.RESULTS_SCREEN).classList.remove('hidden');
-    
-    // Sort raccoons by score
-    const sortedRaccoons = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-    const maxScore = sortedRaccoons[0][1];
-    const winners = sortedRaccoons.filter(([, score]) => score === maxScore);
-    
+
+    const { winners, runnerUp } = calculateResults(scores);
+
     // Store for sharing
-    currentWinners = winners.map(([raccoon]) => raccoonData[raccoon].name);
-    
-    let resultsHTML = winners.length > 1 
-        ? '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>' 
+    currentWinners = winners.map(raccoon => raccoonData[raccoon].name);
+
+    let resultsHTML = winners.length > 1
+        ? '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>'
         : '';
-    
+
     // Show primary result(s)
-    winners.forEach(([raccoon]) => {
+    winners.forEach(raccoon => {
         const data = raccoonData[raccoon];
         resultsHTML += `
             <div class="result-section">
@@ -78,16 +75,10 @@ function showResults() {
             </div>
         `;
     });
-    
-    // Find runner-up (if not already shown)
-    const runnerUpCandidates = sortedRaccoons.filter(([raccoon, score]) => 
-        score < maxScore && !winners.some(([w]) => w === raccoon)
-    );
-    
-    if (runnerUpCandidates.length > 0) {
-        const [runnerUpRaccoon] = runnerUpCandidates[0];
-        const runnerUpData = raccoonData[runnerUpRaccoon];
-        
+
+    if (runnerUp) {
+        const runnerUpData = raccoonData[runnerUp];
+
         resultsHTML += `
             <button class="runner-up-btn" onclick="toggleRunnerUp()">
                 Show Second Place: ${runnerUpData.name}
@@ -97,7 +88,7 @@ function showResults() {
                 <div class="result-section">
                     <h2 class="result-title">${runnerUpData.name}</h2>
                     <p class="result-subtitle">${runnerUpData.subtitle}</p>
-                    <img src="images/${runnerUpRaccoon}.png" alt="${runnerUpData.name}" style="width: 100%; border-radius: 8px; margin: 30px 0;">
+                    <img src="images/${runnerUp}.png" alt="${runnerUpData.name}" style="width: 100%; border-radius: 8px; margin: 30px 0;">
                     <div class="result-content">
                         <strong>Why this raccoon is iconic:</strong>
                         <p>${runnerUpData.iconic}</p>
