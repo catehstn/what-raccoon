@@ -71,7 +71,7 @@ function showResults() {
             <div class="result-section">
                 <h2 class="result-title">${data.name}</h2>
                 <p class="result-subtitle">${data.subtitle}</p>
-                <div class="image-placeholder">[Add ${data.name} image here]</div>
+                <img src="images/${raccoon}.png" alt="${data.name}" style="width: 100%; border-radius: 8px; margin: 30px 0;">
                 <div class="result-content">
                     <strong>Why this raccoon is iconic:</strong>
                     <p>${data.iconic}</p>
