@@ -1,13 +1,10 @@
 let currentQuestion = 0;
 let currentWinners = [];
-let scores = {
-    liquor: 0, mpr: 0, conrad: 0, rebecca: 0,
-    melanie: 0, toronto: 0, stuck: 0, alligator: 0
-};
+let scores = Object.fromEntries(RACCOON_KEYS.map(key => [key, 0]));
 
 function startQuiz() {
-    document.getElementById('start-screen').classList.add('hidden');
-    document.getElementById('quiz-screen').classList.remove('hidden');
+    document.getElementById(ELEMENT_IDS.START_SCREEN).classList.add('hidden');
+    document.getElementById(ELEMENT_IDS.QUIZ_SCREEN).classList.remove('hidden');
     showQuestion();
 }
 
@@ -15,11 +12,11 @@ function showQuestion() {
     const question = questions[currentQuestion];
     const progress = ((currentQuestion + 1) / questions.length) * 100;
     
-    document.getElementById('progress').style.width = progress + '%';
-    document.getElementById('question-number').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
-    document.getElementById('question-text').textContent = question.text;
-    
-    const answersDiv = document.getElementById('answers');
+    document.getElementById(ELEMENT_IDS.PROGRESS).style.width = progress + '%';
+    document.getElementById(ELEMENT_IDS.QUESTION_NUMBER).textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+    document.getElementById(ELEMENT_IDS.QUESTION_TEXT).textContent = question.text;
+
+    const answersDiv = document.getElementById(ELEMENT_IDS.ANSWERS);
     answersDiv.innerHTML = '';
     delete answersDiv.dataset.lastAnswer; // Clear previous answer tracking
     
@@ -32,7 +29,7 @@ function showQuestion() {
     });
     
     // Disable back button on first question
-    const backBtn = document.getElementById('back-btn');
+    const backBtn = document.getElementById(ELEMENT_IDS.BACK_BTN);
     if (backBtn) backBtn.disabled = currentQuestion === 0;
 }
 
@@ -40,7 +37,7 @@ function selectAnswer(answerIndex) {
     const answer = questions[currentQuestion].answers[answerIndex];
     
     // Store the answer for potential back button use
-    document.getElementById('answers').dataset.lastAnswer = answerIndex;
+    document.getElementById(ELEMENT_IDS.ANSWERS).dataset.lastAnswer = answerIndex;
     
     answer.raccoons.forEach(raccoon => scores[raccoon]++);
     currentQuestion++;
@@ -49,8 +46,8 @@ function selectAnswer(answerIndex) {
 }
 
 function showResults() {
-    document.getElementById('quiz-screen').classList.add('hidden');
-    document.getElementById('results-screen').classList.remove('hidden');
+    document.getElementById(ELEMENT_IDS.QUIZ_SCREEN).classList.add('hidden');
+    document.getElementById(ELEMENT_IDS.RESULTS_SCREEN).classList.remove('hidden');
     
     // Sort raccoons by score
     const sortedRaccoons = Object.entries(scores).sort((a, b) => b[1] - a[1]);
@@ -95,12 +92,12 @@ function showResults() {
             <button class="runner-up-btn" onclick="toggleRunnerUp()">
                 Show Second Place: ${runnerUpData.name}
             </button>
-            <div id="runner-up-content" class="runner-up-section hidden">
+            <div id="${ELEMENT_IDS.RUNNER_UP_CONTENT}" class="runner-up-section hidden">
                 <h3>You're also a bit of a...</h3>
                 <div class="result-section">
                     <h2 class="result-title">${runnerUpData.name}</h2>
                     <p class="result-subtitle">${runnerUpData.subtitle}</p>
-                    <<img src="images/${runnerUpRaccoon}.png" alt="${runnerUpData.name}" style="width: 100%; border-radius: 8px; margin: 30px 0;">
+                    <img src="images/${runnerUpRaccoon}.png" alt="${runnerUpData.name}" style="width: 100%; border-radius: 8px; margin: 30px 0;">
                     <div class="result-content">
                         <strong>Why this raccoon is iconic:</strong>
                         <p>${runnerUpData.iconic}</p>
@@ -112,7 +109,7 @@ function showResults() {
         `;
     }
     
-    document.getElementById('results-content').innerHTML = resultsHTML;
+    document.getElementById(ELEMENT_IDS.RESULTS_CONTENT).innerHTML = resultsHTML;
 }
 
 function goBack() {
@@ -120,7 +117,7 @@ function goBack() {
     
     // Remove points from previous answer
     const prevQuestion = questions[currentQuestion - 1];
-    const prevAnswerIndex = parseInt(document.getElementById('answers').dataset.lastAnswer);
+    const prevAnswerIndex = parseInt(document.getElementById(ELEMENT_IDS.ANSWERS).dataset.lastAnswer);
     
     if (!isNaN(prevAnswerIndex)) {
         prevQuestion.answers[prevAnswerIndex].raccoons.forEach(raccoon => scores[raccoon]--);
@@ -139,18 +136,18 @@ function quitQuiz() {
     if (!confirm('Are you sure you want to start over? Your progress will be lost.')) return;
     
     resetScores();
-    document.getElementById('quiz-screen').classList.add('hidden');
-    document.getElementById('start-screen').classList.remove('hidden');
+    document.getElementById(ELEMENT_IDS.QUIZ_SCREEN).classList.add('hidden');
+    document.getElementById(ELEMENT_IDS.START_SCREEN).classList.remove('hidden');
 }
 
 function restartQuiz() {
     resetScores();
-    document.getElementById('results-screen').classList.add('hidden');
-    document.getElementById('start-screen').classList.remove('hidden');
+    document.getElementById(ELEMENT_IDS.RESULTS_SCREEN).classList.add('hidden');
+    document.getElementById(ELEMENT_IDS.START_SCREEN).classList.remove('hidden');
 }
 
 function toggleRunnerUp() {
-    const runnerUpContent = document.getElementById('runner-up-content');
+    const runnerUpContent = document.getElementById(ELEMENT_IDS.RUNNER_UP_CONTENT);
     const button = document.querySelector('.runner-up-btn');
     
     if (runnerUpContent.classList.contains('hidden')) {
@@ -171,7 +168,7 @@ function shareResult() {
         : currentWinners[0];
     
     const shareText = `I'm a ${raccoonText}! What raccoon are you?`;
-    const shareUrl = 'https://catehstn.github.io/what-raccoon/';
+    const shareUrl = QUIZ_URL;
     const fullText = `${shareText} ${shareUrl}`;
     
     // Check if we're on mobile (native share works well on mobile)
@@ -189,7 +186,7 @@ function shareResult() {
     } else {
         // Copy to clipboard on desktop
         navigator.clipboard.writeText(fullText).then(() => {
-            const btn = document.getElementById('share-btn');
+            const btn = document.getElementById(ELEMENT_IDS.SHARE_BTN);
             const originalText = btn.textContent;
             btn.textContent = 'Copied to clipboard!';
             setTimeout(() => btn.textContent = originalText, 2000);
