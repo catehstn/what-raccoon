@@ -3,23 +3,23 @@ let currentWinners = [];
 let scores = Object.fromEntries(RACCOON_KEYS.map(key => [key, 0]));
 
 function startQuiz() {
-    document.getElementById(ELEMENT_IDS.START_SCREEN).classList.add('hidden');
-    document.getElementById(ELEMENT_IDS.QUIZ_SCREEN).classList.remove('hidden');
+    DOM.hide(ELEMENT_IDS.START_SCREEN);
+    DOM.show(ELEMENT_IDS.QUIZ_SCREEN);
     showQuestion();
 }
 
 function showQuestion() {
     const question = questions[currentQuestion];
     const progress = ((currentQuestion + 1) / questions.length) * 100;
-    
-    document.getElementById(ELEMENT_IDS.PROGRESS).style.width = progress + '%';
-    document.getElementById(ELEMENT_IDS.QUESTION_NUMBER).textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
-    document.getElementById(ELEMENT_IDS.QUESTION_TEXT).textContent = question.text;
 
-    const answersDiv = document.getElementById(ELEMENT_IDS.ANSWERS);
+    DOM.get(ELEMENT_IDS.PROGRESS).style.width = progress + '%';
+    DOM.setText(ELEMENT_IDS.QUESTION_NUMBER, `Question ${currentQuestion + 1} of ${questions.length}`);
+    DOM.setText(ELEMENT_IDS.QUESTION_TEXT, question.text);
+
+    const answersDiv = DOM.get(ELEMENT_IDS.ANSWERS);
     answersDiv.innerHTML = '';
     delete answersDiv.dataset.lastAnswer; // Clear previous answer tracking
-    
+
     question.answers.forEach((answer, index) => {
         const btn = document.createElement('button');
         btn.className = 'answer-btn';
@@ -27,32 +27,35 @@ function showQuestion() {
         btn.onclick = () => selectAnswer(index);
         answersDiv.appendChild(btn);
     });
-    
+
     // Disable back button on first question
-    const backBtn = document.getElementById(ELEMENT_IDS.BACK_BTN);
+    const backBtn = DOM.get(ELEMENT_IDS.BACK_BTN);
     if (backBtn) backBtn.disabled = currentQuestion === 0;
 }
 
 function selectAnswer(answerIndex) {
     const answer = questions[currentQuestion].answers[answerIndex];
-    
+
     // Store the answer for potential back button use
-    document.getElementById(ELEMENT_IDS.ANSWERS).dataset.lastAnswer = answerIndex;
-    
+    DOM.get(ELEMENT_IDS.ANSWERS).dataset.lastAnswer = answerIndex;
+
     answer.raccoons.forEach(raccoon => scores[raccoon]++);
     currentQuestion++;
-    
+
     currentQuestion < questions.length ? showQuestion() : showResults();
 }
 
 function showResults() {
-    document.getElementById(ELEMENT_IDS.QUIZ_SCREEN).classList.add('hidden');
-    document.getElementById(ELEMENT_IDS.RESULTS_SCREEN).classList.remove('hidden');
+    DOM.hide(ELEMENT_IDS.QUIZ_SCREEN);
+    DOM.show(ELEMENT_IDS.RESULTS_SCREEN);
 
     const { winners, runnerUp } = calculateResults(scores);
 
     // Store for sharing
     currentWinners = winners.map(raccoon => raccoonData[raccoon].name);
+
+    // Store for sharing
+    currentWinners = winners.map(([raccoon]) => raccoonData[raccoon].name);
 
     let resultsHTML = winners.length > 1
         ? '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>'
@@ -99,21 +102,21 @@ function showResults() {
             </div>
         `;
     }
-    
-    document.getElementById(ELEMENT_IDS.RESULTS_CONTENT).innerHTML = resultsHTML;
+
+    DOM.setHTML(ELEMENT_IDS.RESULTS_CONTENT, resultsHTML);
 }
 
 function goBack() {
     if (currentQuestion === 0) return;
-    
+
     // Remove points from previous answer
     const prevQuestion = questions[currentQuestion - 1];
-    const prevAnswerIndex = parseInt(document.getElementById(ELEMENT_IDS.ANSWERS).dataset.lastAnswer);
-    
+    const prevAnswerIndex = parseInt(DOM.get(ELEMENT_IDS.ANSWERS).dataset.lastAnswer);
+
     if (!isNaN(prevAnswerIndex)) {
         prevQuestion.answers[prevAnswerIndex].raccoons.forEach(raccoon => scores[raccoon]--);
     }
-    
+
     currentQuestion--;
     showQuestion();
 }
@@ -125,27 +128,27 @@ function resetScores() {
 
 function quitQuiz() {
     if (!confirm('Are you sure you want to start over? Your progress will be lost.')) return;
-    
+
     resetScores();
-    document.getElementById(ELEMENT_IDS.QUIZ_SCREEN).classList.add('hidden');
-    document.getElementById(ELEMENT_IDS.START_SCREEN).classList.remove('hidden');
+    DOM.hide(ELEMENT_IDS.QUIZ_SCREEN);
+    DOM.show(ELEMENT_IDS.START_SCREEN);
 }
 
 function restartQuiz() {
     resetScores();
-    document.getElementById(ELEMENT_IDS.RESULTS_SCREEN).classList.add('hidden');
-    document.getElementById(ELEMENT_IDS.START_SCREEN).classList.remove('hidden');
+    DOM.hide(ELEMENT_IDS.RESULTS_SCREEN);
+    DOM.show(ELEMENT_IDS.START_SCREEN);
 }
 
 function toggleRunnerUp() {
-    const runnerUpContent = document.getElementById(ELEMENT_IDS.RUNNER_UP_CONTENT);
+    const runnerUpContent = DOM.get(ELEMENT_IDS.RUNNER_UP_CONTENT);
     const button = document.querySelector('.runner-up-btn');
-    
+
     if (runnerUpContent.classList.contains('hidden')) {
-        runnerUpContent.classList.remove('hidden');
+        DOM.show(ELEMENT_IDS.RUNNER_UP_CONTENT);
         button.textContent = 'Hide Second Place';
     } else {
-        runnerUpContent.classList.add('hidden');
+        DOM.hide(ELEMENT_IDS.RUNNER_UP_CONTENT);
         const raccoonName = raccoonData[Object.entries(scores)
             .sort((a, b) => b[1] - a[1])
             .filter(([, s]) => s < Math.max(...Object.values(scores)))[0][0]].name;
@@ -154,17 +157,17 @@ function toggleRunnerUp() {
 }
 
 function shareResult() {
-    const raccoonText = currentWinners.length > 1 
+    const raccoonText = currentWinners.length > 1
         ? currentWinners.join(' and ')
         : currentWinners[0];
-    
+
     const shareText = `I'm a ${raccoonText}! What raccoon are you?`;
     const shareUrl = QUIZ_URL;
     const fullText = `${shareText} ${shareUrl}`;
-    
+
     // Check if we're on mobile (native share works well on mobile)
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
+
     if (isMobile && navigator.share) {
         // Use native share on mobile
         navigator.share({
@@ -177,7 +180,7 @@ function shareResult() {
     } else {
         // Copy to clipboard on desktop
         navigator.clipboard.writeText(fullText).then(() => {
-            const btn = document.getElementById(ELEMENT_IDS.SHARE_BTN);
+            const btn = DOM.get(ELEMENT_IDS.SHARE_BTN);
             const originalText = btn.textContent;
             btn.textContent = 'Copied to clipboard!';
             setTimeout(() => btn.textContent = originalText, 2000);
