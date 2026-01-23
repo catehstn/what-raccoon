@@ -54,9 +54,6 @@ function showResults() {
     // Store for sharing
     currentWinners = winners.map(raccoon => raccoonData[raccoon].name);
 
-    // Store for sharing
-    currentWinners = winners.map(([raccoon]) => raccoonData[raccoon].name);
-
     let resultsHTML = winners.length > 1
         ? '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>'
         : '';
