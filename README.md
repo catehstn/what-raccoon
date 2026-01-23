@@ -27,9 +27,16 @@ Are you thriving despite the chaos? Burnt out and self-sabotaging? Riding the ca
 what-raccoon/
 ├── index.html       # Main HTML structure
 ├── styles.css       # All styling including dark mode
+├── constants.js     # Shared constants (URLs, element IDs, raccoon keys)
+├── scoring.js       # Score calculation logic
+├── domHelpers.js    # DOM manipulation helpers
 ├── questions.js     # Quiz questions and answer mappings
 ├── results.js       # Raccoon descriptions and details
 ├── quiz.js          # Quiz logic and functionality
+├── test/            # Test files
+│   ├── scoring.test.js
+│   ├── question.test.js
+│   └── images.test.js
 └── README.md        # This file
 ```
 
@@ -40,6 +47,20 @@ This is a static HTML/CSS/JS site that can be hosted anywhere:
 1. Clone this repository
 2. Open `index.html` in a browser, or
 3. Host on GitHub Pages, Netlify, Vercel, etc.
+
+## Running Tests
+
+Tests use a simple Node.js test runner with no dependencies.
+
+```bash
+# Run all tests
+node test/scoring.test.js && node test/question.test.js && node test/images.test.js
+
+# Run individual test files
+node test/scoring.test.js   # Tests score calculation
+node test/question.test.js  # Tests question structure
+node test/images.test.js    # Tests image files exist and paths are correct
+```
 
 ## Customization
 
