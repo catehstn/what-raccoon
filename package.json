@@ -1,0 +1,30 @@
+{
+  "name": "what-raccoon",
+  "version": "1.0.0",
+  "description": "A personality quiz for tech workers in 2026. Find out which iconic raccoon represents your current tech worker experience.",
+  "main": "constants.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test/scoring.test.js && node test/question.test.js && node test/images.test.js",
+    "test:e2e": "npx playwright test",
+    "test:all": "npm test && npm run test:e2e"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/catehstn/what-raccoon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/catehstn/what-raccoon/issues"
+  },
+  "homepage": "https://github.com/catehstn/what-raccoon#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "serve": "^14.2.5"
+  }
+}

@@ -1,3 +1,13 @@
 # misc file system caches
 .DS_Store
 Thumbs.db
+
+# dependencies
+node_modules/
+
+# Playwright
+test-results/
+playwright-report/
+
+# Claude
+.claude/

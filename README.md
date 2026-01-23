@@ -36,7 +36,9 @@ what-raccoon/
 ├── test/            # Test files
 │   ├── scoring.test.js
 │   ├── question.test.js
-│   └── images.test.js
+│   ├── images.test.js
+│   └── e2e/
+│       └── quiz.spec.js
 └── README.md        # This file
 ```
 
@@ -50,16 +52,32 @@ This is a static HTML/CSS/JS site that can be hosted anywhere:
 
 ## Running Tests
 
-Tests use a simple Node.js test runner with no dependencies.
+### Unit Tests
+
+Unit tests use a simple Node.js test runner with no dependencies.
 
 ```bash
-# Run all tests
-node test/scoring.test.js && node test/question.test.js && node test/images.test.js
+npm test
 
-# Run individual test files
+# Or run individual test files
 node test/scoring.test.js   # Tests score calculation
 node test/question.test.js  # Tests question structure
 node test/images.test.js    # Tests image files exist and paths are correct
+```
+
+### End-to-End Tests
+
+E2E tests use Playwright to test the full quiz flow in a browser.
+
+```bash
+# Install dependencies first
+npm install
+
+# Run E2E tests
+npm run test:e2e
+
+# Run all tests (unit + E2E)
+npm run test:all
 ```
 
 ## Customization
