@@ -387,7 +387,7 @@ a:hover {
   position: relative;
 
   /*background-color: var(--primary);*/
-  background-image: url("/images/whosthatraccoon/bg.png");
+  background-image: url("images/whosthatraccoon/bg.png");
   background-size: cover;
   background-position: center;
   border-radius: 12px;
