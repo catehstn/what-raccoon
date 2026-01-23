@@ -375,3 +375,75 @@ a:hover {
 .result-content a {
     font-weight: 500;
 }
+
+/* Who's that raccoon? hero animation */
+.wtr {
+  --duration: 4s;
+  --offset: 1s;
+
+  height: 320px;
+  margin-bottom: 28px;
+
+  position: relative;
+
+  /*background-color: var(--primary);*/
+  background-image: url("/images/whosthatraccoon/bg.png");
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+}
+
+.wtr-sil {
+  height: 260px;
+
+  position: absolute;
+  left: 2.5%;
+  top: 15%;
+
+  animation-name: wtr-fade-in-out;
+  animation-duration: var(--duration);
+  animation-delay: calc(var(--offset) + var(--duration) * var(--i));
+
+  transform: scale(0%);
+}
+
+@media (width >= 640px) {
+  .wtr-sil {
+    left: 12.5%;
+  }
+}
+
+.wtr-sil:last-child {
+  animation: wtr-fade-in;
+  /* retain end keyframe styles on last image. needs explicit duration and delay.*/
+  animation-fill-mode: forwards;
+  animation-duration: var(--duration);
+  animation-delay: calc(var(--offset) + var(--duration) * var(--i));
+}
+
+@keyframes wtr-fade-in-out {
+  0% {
+    transform: scale(0%);
+  }
+  10% {
+    transform: scale(100%);
+  }
+  90% {
+    transform: scale(100%);
+  }
+  100% {
+    transform: scale(0%);
+  }
+}
+
+@keyframes wtr-fade-in {
+  0% {
+    transform: scale(0%);
+  }
+  10% {
+    transform: scale(100%);
+  }
+  100% {
+    transform: scale(100%);
+  }
+}
