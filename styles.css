@@ -381,6 +381,7 @@ a:hover {
   --duration: 4s;
   --offset: 1s;
 
+  width: 100%;
   aspect-ratio: 2360 / 1640; /* match background image dimensions */
   max-height: 320px;
   margin-bottom: 28px;
@@ -389,9 +390,8 @@ a:hover {
 
   /*background-color: var(--primary);*/
   background-image: url("images/whosthatraccoon/bg.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-size: 100% 100%;
+  background-position: left top;
   border-radius: 12px;
 }
 
