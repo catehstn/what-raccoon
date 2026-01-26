@@ -381,14 +381,16 @@ a:hover {
   --duration: 4s;
   --offset: 1s;
 
-  height: 320px;
+  aspect-ratio: 2360 / 1640; /* match background image dimensions */
+  max-height: 320px;
   margin-bottom: 28px;
 
   position: relative;
 
   /*background-color: var(--primary);*/
   background-image: url("images/whosthatraccoon/bg.png");
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   background-position: center;
   border-radius: 12px;
 }
