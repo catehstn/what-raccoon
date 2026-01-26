@@ -394,7 +394,9 @@ a:hover {
 }
 
 .wtr-sil {
-  height: 260px;
+  height: 81.25%; /* 260/320 - scales with container */
+  width: auto; /* maintain aspect ratio */
+  max-height: 260px; /* cap on larger screens */
 
   position: absolute;
   left: 2.5%;
