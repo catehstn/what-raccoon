@@ -390,9 +390,8 @@ a:hover {
 
   /*background-color: var(--primary);*/
   background-image: url("images/whosthatraccoon/bg.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-size: 100% 100%;
+  background-position: left top;
   border-radius: 12px;
 }
 
