@@ -82,18 +82,6 @@ npm run test:all
 
 ## Customization
 
-### Adding Images
-
-Replace the image placeholders in `index.html`:
-```html
-<div class="image-placeholder">[Add quiz intro image here]</div>
-```
-
-With actual images:
-```html
-<img src="your-image.jpg" alt="Description" style="width: 100%; border-radius: 8px;">
-```
-
 ### Modifying Questions
 
 Edit `questions.js` to change questions or answer options. Each answer maps to 2 raccoons.
@@ -116,6 +104,8 @@ The quiz automatically detects and honors your system's dark mode preference. No
 ## Credits
 
 Made by [Cate](https://cate.blog)
+
+Art by [Joe Groove](https://hachyderm.io/@Thrashpanda@chaos.social)
 
 Follow me on [LinkedIn](https://www.linkedin.com/in/catehuston/) / [Mastodon](https://hachyderm.io/@cate) / [Bluesky](https://bsky.app/profile/catehstn.bsky.social)
 
