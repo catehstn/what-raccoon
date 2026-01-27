@@ -103,9 +103,9 @@ The quiz automatically detects and honors your system's dark mode preference. No
 
 ## Credits
 
-Made by [Cate](https://cate.blog)
+Art by [Joe Groove](https://groove.museum)
 
-Art by [Joe Groove](https://hachyderm.io/@Thrashpanda@chaos.social)
+Made by [Cate](https://cate.blog)
 
 Follow me on [LinkedIn](https://www.linkedin.com/in/catehuston/) / [Mastodon](https://hachyderm.io/@cate) / [Bluesky](https://bsky.app/profile/catehstn.bsky.social)
 
