@@ -12,3 +12,7 @@ function calculateResults(scores) {
 
     return { winners, runnerUp, sorted };
 }
+
+function buildResultComboKey(winners) {
+    return winners.slice().sort().join('+');
+}

@@ -54,6 +54,22 @@ function showResults() {
     // Store for sharing
     currentWinners = winners.map(raccoon => raccoonData[raccoon].name);
 
+    if (window.goatcounter) {
+        winners.forEach(raccoon => {
+            window.goatcounter.count({
+                path: 'result/' + raccoon,
+                title: 'Result: ' + raccoonData[raccoon].name,
+                event: true,
+            });
+        });
+        const comboKey = buildResultComboKey(winners);
+        window.goatcounter.count({
+            path: 'result-combo/' + comboKey,
+            title: 'Result combo: ' + comboKey,
+            event: true,
+        });
+    }
+
     let resultsHTML = winners.length > 1
         ? '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>'
         : '';
