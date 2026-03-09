@@ -62,6 +62,12 @@ function showResults() {
                 event: true,
             });
         });
+        const comboKey = winners.slice().sort().join('+');
+        window.goatcounter.count({
+            path: 'result-combo/' + comboKey,
+            title: 'Result combo: ' + comboKey,
+            event: true,
+        });
     }
 
     let resultsHTML = winners.length > 1
