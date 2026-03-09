@@ -87,6 +87,29 @@ test('handles realistic quiz scores', () => {
     assertEqual(result.runnerUp, 'mpr');
 });
 
+// buildResultComboKey
+test('single winner produces just the raccoon key', () => {
+    assertEqual(buildResultComboKey(['trike']), 'trike');
+});
+
+test('two winners joined with plus', () => {
+    assertEqual(buildResultComboKey(['trike', 'mpr']), 'mpr+trike');
+});
+
+test('winners sorted alphabetically so order does not matter', () => {
+    assertEqual(buildResultComboKey(['mpr', 'trike']), buildResultComboKey(['trike', 'mpr']));
+});
+
+test('three-way tie sorted alphabetically', () => {
+    assertEqual(buildResultComboKey(['trike', 'alligator', 'mpr']), 'alligator+mpr+trike');
+});
+
+test('does not mutate the original winners array', () => {
+    const winners = ['trike', 'alligator'];
+    buildResultComboKey(winners);
+    assertEqual(winners, ['trike', 'alligator']);
+});
+
 // Summary
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed > 0 ? 1 : 0);

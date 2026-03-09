@@ -62,7 +62,7 @@ function showResults() {
                 event: true,
             });
         });
-        const comboKey = winners.slice().sort().join('+');
+        const comboKey = buildResultComboKey(winners);
         window.goatcounter.count({
             path: 'result-combo/' + comboKey,
             title: 'Result combo: ' + comboKey,
