@@ -5,6 +5,7 @@ let scores = Object.fromEntries(RACCOON_KEYS.map(key => [key, 0]));
 function startQuiz() {
     DOM.hide(ELEMENT_IDS.START_SCREEN);
     DOM.show(ELEMENT_IDS.QUIZ_SCREEN);
+    DOM.get(ELEMENT_IDS.QUIZ_SCREEN).focus();
     showQuestion();
 }
 
