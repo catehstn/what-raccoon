@@ -14,6 +14,9 @@
 </head>
 <body>
     <div class="container">
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+            <span class="theme-toggle-label">Dark</span>
+        </button>
         <!-- Start Screen -->
         <div id="start-screen">
             <h1>Which Raccoon Are You?</h1>
@@ -45,6 +48,7 @@
             <div class="question-number" id="question-number"></div>
             <div class="question-text" id="question-text"></div>
             <div class="answers" id="answers"></div>
+            <p class="kbd-hint">Press <kbd>1</kbd>–<kbd>4</kbd> to answer</p>
             <div class="quiz-nav">
                 <button class="back-btn" id="back-btn" onclick="goBack()">← Back</button>
                 <button class="quit-btn" onclick="quitQuiz()">Start Over</button>
@@ -68,8 +72,10 @@
                     <a href="https://buttondown.com/refer/whats-my-job-again" target="_blank" rel="noopener">Powered by Buttondown.</a>
                 </p>
             </div>
-            <button class="share-btn" id="share-btn" onclick="shareResult()">Share Your Result</button>
-            <button class="restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
+            <div class="results-actions">
+                <button class="share-btn" id="share-btn" onclick="shareResult()">Share Your Result</button>
+                <button class="restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
+            </div>
             <div class="footer">
                 <div>Art by <a href="https://groove.museum" target="_blank" rel="noopener">Joe Groove</a></div>
                 <div>Made by <a href="https://cate.blog/2026/02/10/what-raccoon-are-you-quiz-and-some-thoughts-on-vibe-coding/" target="_blank" rel="noopener">Cate</a></div>
