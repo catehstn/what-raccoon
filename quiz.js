@@ -31,6 +31,8 @@ function showQuestion() {
     // Disable back button on first question
     const backBtn = DOM.get(ELEMENT_IDS.BACK_BTN);
     if (backBtn) backBtn.disabled = currentQuestion === 0;
+
+    window.scrollTo(0, 0);
 }
 
 function selectAnswer(answerIndex) {
@@ -70,18 +72,20 @@ function showResults() {
         });
     }
 
-    let resultsHTML = winners.length > 1
+    const tied = winners.length > 1;
+    let resultsHTML = tied
         ? '<div class="tie-notice">You\'re tied between multiple raccoons! Here are your results:</div>'
         : '';
 
     // Show primary result(s)
+    let winnersHTML = '';
     winners.forEach(raccoon => {
         const data = raccoonData[raccoon];
-        resultsHTML += `
+        winnersHTML += `
             <div class="result-section">
                 <h2 class="result-title">${data.name}</h2>
                 <p class="result-subtitle">${data.subtitle}</p>
-                <img src="images/${raccoon}.png" alt="${data.name}" style="width: 100%; border-radius: 8px; margin: 30px 0;">
+                <img src="images/${raccoon}.png" alt="${data.name}" class="result-img">
                 <div class="result-content">
                     <strong>Why this raccoon is iconic:</strong>
                     <p>${data.iconic}</p>
@@ -91,6 +95,7 @@ function showResults() {
             </div>
         `;
     });
+    resultsHTML += tied ? `<div class="winners-grid">${winnersHTML}</div>` : winnersHTML;
 
     if (runnerUp) {
         const runnerUpData = raccoonData[runnerUp];
@@ -104,7 +109,7 @@ function showResults() {
                 <div class="result-section">
                     <h2 class="result-title">${runnerUpData.name}</h2>
                     <p class="result-subtitle">${runnerUpData.subtitle}</p>
-                    <img src="images/${runnerUp}.png" alt="${runnerUpData.name}" style="width: 100%; border-radius: 8px; margin: 30px 0;">
+                    <img src="images/${runnerUp}.png" alt="${runnerUpData.name}" class="result-img">
                     <div class="result-content">
                         <strong>Why this raccoon is iconic:</strong>
                         <p>${runnerUpData.iconic}</p>
@@ -117,6 +122,7 @@ function showResults() {
     }
 
     DOM.setHTML(ELEMENT_IDS.RESULTS_CONTENT, resultsHTML);
+    window.scrollTo(0, 0);
 }
 
 function goBack() {
@@ -204,14 +210,47 @@ function shareResult() {
     }
 }
 
-// Auto-detect system dark mode preference
-window.addEventListener('DOMContentLoaded', () => {
-    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark-mode');
+// ---------- Theme: system preference + manual override ----------
+function applyTheme(mode) {
+    document.body.classList.toggle('dark-mode', mode === 'dark');
+    const label = document.querySelector('#theme-toggle .theme-toggle-label');
+    if (label) {
+        const next = mode === 'dark' ? 'Light' : 'Dark';
+        label.textContent = next;
+        document.getElementById('theme-toggle')
+            .setAttribute('aria-label', `Switch to ${next.toLowerCase()} mode`);
     }
+}
+
+function currentTheme() {
+    const saved = localStorage.getItem('wr-theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function toggleTheme() {
+    const next = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+    localStorage.setItem('wr-theme', next);
+    applyTheme(next);
+}
+
+window.addEventListener('DOMContentLoaded', () => applyTheme(currentTheme()));
+
+// Follow the system only while the user hasn't set a manual preference
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('wr-theme')) applyTheme(e.matches ? 'dark' : 'light');
 });
 
-// Listen for system dark mode changes in real-time
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    document.body.classList[e.matches ? 'add' : 'remove']('dark-mode');
+// ---------- Keyboard play: 1–4 to answer, ← / Backspace to go back ----------
+document.addEventListener('keydown', (e) => {
+    if (DOM.get(ELEMENT_IDS.QUIZ_SCREEN).classList.contains('hidden')) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+    if (e.key >= '1' && e.key <= '9') {
+        const btns = DOM.get(ELEMENT_IDS.ANSWERS).querySelectorAll('.answer-btn');
+        const idx = parseInt(e.key, 10) - 1;
+        if (btns[idx]) { e.preventDefault(); btns[idx].click(); }
+    } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+        if (currentQuestion > 0) { e.preventDefault(); goBack(); }
+    }
 });
